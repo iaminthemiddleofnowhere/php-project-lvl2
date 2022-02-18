@@ -1,0 +1,15 @@
+{
+    "name": "hexlet/code",
+    "description": "Generate diff for Hexlet",
+    "license": "MIT",
+    "bin": [
+        "bin/gendiff"
+    ],
+    "autoload" : {
+        "files": [
+        ]
+    },
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
