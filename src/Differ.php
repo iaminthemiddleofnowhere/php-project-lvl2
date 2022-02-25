@@ -2,42 +2,63 @@
 
 namespace Differ\Differ;
 
-function genDiff(string $pathToFile1, string $pathToFile2)
+function genDiff(string $pathToFile1, string $pathToFile2): string
 {
-    $array1 = arrayBoolsToStr(json_decode(file_get_contents($pathToFile1), true));
-    $array2 = arrayBoolsToStr(json_decode(file_get_contents($pathToFile2), true));
-    $result = "{\n";
+    $array1 = json_decode(file_get_contents($pathToFile1), true);
+    $array2 = json_decode(file_get_contents($pathToFile2), true);
+    $diff = findDiff($array1, $array2);
 
+    return diffToString($diff);
+}
+
+function findDiff(array $array1, array $array2): array
+{
+    $result = [];
     foreach ($array1 as $k => $v) {
         if (array_key_exists($k, $array2)) {
             if ($v === $array2[$k]) {
-                $result .= "\t{$k}: {$v}\n";
+                $result[$k] = $v;
             } else {
-                $result .= "\t- {$k}: {$v}\n";
-                $result .= "\t+ {$k}: {$array2[$k]}\n";
+                $result[$k]["- {$k}"] = $v;
+                $result[$k]["+ {$k}"] = $array2[$k];
             }
         } else {
-            $result .= "\t- {$k}: {$v}\n";
+            $result[$k]["- {$k}"] = $v;
         }
     }
     $diff = array_diff($array2, $array1);
 
     foreach ($diff as $k => $v) {
         if (!array_key_exists($k, $array1)) {
-            $result .= "\t+ {$k}: {$v}\n";
+            $result[$k]["+ {$k}"] = $v;
         }
+    }
+
+    ksort($result);
+
+    return flatten($result);
+}
+
+function diffToString(array $array): string
+{
+    $result = "{\n";
+    foreach ($array as $k => $v) {
+        if (is_bool($v)) {
+            $v = $v ? 'true' : 'false';
+        }
+        $result .= "  {$k}: {$v}\n";
     }
     $result .= "}\n";
 
     return $result;
 }
 
-function arrayBoolsToStr(array $array)
+function flatten(array $array): array
 {
-    return array_map(function ($v) {
-        if (is_bool($v)) {
-            return var_export($v, true);
-        }
-        return $v;
-    }, $array);
+    $result = [];
+    array_walk_recursive($array, function ($v, $k) use (&$result) {
+        $result[$k] = $v;
+    });
+
+    return $result;
 }
