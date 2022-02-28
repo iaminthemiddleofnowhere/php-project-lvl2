@@ -4,8 +4,10 @@ namespace Differ\Differ;
 
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
-    $array1 = json_decode(file_get_contents($pathToFile1), true);
-    $array2 = json_decode(file_get_contents($pathToFile2), true);
+    $realPath1 = realpath($pathToFile1);
+    $realPath2 = realpath($pathToFile2);
+    $array1 = json_decode(file_get_contents($realPath1), true);
+    $array2 = json_decode(file_get_contents($realPath2), true);
     $diff = findDiff($array1, $array2);
 
     return diffToString($diff);
@@ -17,7 +19,7 @@ function findDiff(array $array1, array $array2): array
     foreach ($array1 as $k => $v) {
         if (array_key_exists($k, $array2)) {
             if ($v === $array2[$k]) {
-                $result[$k] = $v;
+                $result[$k]["  {$k}"] = $v;
             } else {
                 $result[$k]["- {$k}"] = $v;
                 $result[$k]["+ {$k}"] = $array2[$k];
