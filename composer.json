@@ -7,11 +7,13 @@
     ],
     "autoload" : {
         "files": [
-            "src/Differ.php"
+            "src/Differ.php",
+            "src/Parser.php"
         ]
     },
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "symfony/yaml": "^6.0"
     },
     "scripts": {
         "tests": "phpunit tests"

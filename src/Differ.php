@@ -2,12 +2,17 @@
 
 namespace Differ\Differ;
 
+use function Differ\Parser\parse;
+
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
-    $realPath1 = realpath($pathToFile1);
-    $realPath2 = realpath($pathToFile2);
-    $array1 = json_decode(file_get_contents($realPath1), true);
-    $array2 = json_decode(file_get_contents($realPath2), true);
+    try {
+        $array1 = parse($pathToFile1);
+        $array2 = parse($pathToFile2);    
+    } catch (\Exception $e) {
+        echo $e->getMessage();
+        exit();
+    }
     $diff = findDiff($array1, $array2);
 
     return diffToString($diff);
