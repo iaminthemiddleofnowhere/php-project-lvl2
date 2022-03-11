@@ -25,9 +25,7 @@ Options:
   --format <fmt>                Report format [default: stylish]
 DOC;
 
-$request = Docopt::handle($doc, ['version' => '0.01']);
+$request = Docopt::handle($doc, ['version' => '0.5']);
 $args = $request->args;
 
-if (isset($args['--format'])) {
-  echo genDiff($args['<firstFile>'], $args['<secondFile>']);
-}
+echo genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);

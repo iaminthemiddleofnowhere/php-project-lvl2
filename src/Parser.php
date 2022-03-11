@@ -1,6 +1,7 @@
 <?php
 
 namespace Differ\Parser;
+
 use Symfony\Component\Yaml\Yaml;
 
 function parse(string $path): array

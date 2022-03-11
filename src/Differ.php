@@ -3,12 +3,13 @@
 namespace Differ\Differ;
 
 use function Differ\Parser\parse;
+use function Differ\Formatters\Stylish\diffToString;
 
-function genDiff(string $pathToFile1, string $pathToFile2): string
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
     try {
         $array1 = parse($pathToFile1);
-        $array2 = parse($pathToFile2);    
+        $array2 = parse($pathToFile2);
     } catch (\Exception $e) {
         echo $e->getMessage();
         exit();
@@ -20,52 +21,38 @@ function genDiff(string $pathToFile1, string $pathToFile2): string
 
 function findDiff(array $array1, array $array2): array
 {
-    $result = [];
-    foreach ($array1 as $k => $v) {
-        if (array_key_exists($k, $array2)) {
-            if ($v === $array2[$k]) {
-                $result[$k]["  {$k}"] = $v;
+    $iter = function ($currentArray1, $currentArray2) use (&$iter) {
+        $result = array_map(function ($key1, $value1) use (&$currentArray2, &$iter) {
+            if (array_key_exists($key1, $currentArray2)) {
+                $value2 = $currentArray2[$key1];
+                if (!is_array($value1) && !is_array($value2)) {
+                    if ($value1 === $value2) {
+                        return ["key" => $key1, "status" => "unchanged", "value" => $value1];
+                    } else {
+                        return ["key" => $key1, "status" => "changed", "removed" => $value1, "added" => $value2];
+                    }
+                } elseif (is_array($value1) && is_array($value2)) {
+                    return ["key" => $key1, "status" => "unchanged", "children" => $iter($value1, $value2)];
+                } else {
+                    return ["key" => $key1, "status" => "changed", "removed" => $value1, "added" => $value2];
+                }
             } else {
-                $result[$k]["- {$k}"] = $v;
-                $result[$k]["+ {$k}"] = $array2[$k];
+                return ["key" => $key1, "status" => "changed", "removed" => $value1];
             }
-        } else {
-            $result[$k]["- {$k}"] = $v;
+        },
+        array_keys($currentArray1),
+        $currentArray1);
+
+        foreach ($currentArray2 as $key2 => $value2) {
+            if (!array_key_exists($key2, $currentArray1)) {
+                $result[] = ["key" => $key2, "status" => "changed", "added" => $value2];
+            }
         }
-    }
-    $diff = array_diff($array2, $array1);
 
-    foreach ($diff as $k => $v) {
-        if (!array_key_exists($k, $array1)) {
-            $result[$k]["+ {$k}"] = $v;
-        }
-    }
+        usort($result, fn($a, $b) => $a["key"] > $b["key"]);
 
-    ksort($result);
+        return $result;
+    };
 
-    return flatten($result);
-}
-
-function diffToString(array $array): string
-{
-    $result = "{\n";
-    foreach ($array as $k => $v) {
-        if (is_bool($v)) {
-            $v = $v ? 'true' : 'false';
-        }
-        $result .= "  {$k}: {$v}\n";
-    }
-    $result .= "}\n";
-
-    return $result;
-}
-
-function flatten(array $array): array
-{
-    $result = [];
-    array_walk_recursive($array, function ($v, $k) use (&$result) {
-        $result[$k] = $v;
-    });
-
-    return $result;
+    return $iter($array1, $array2);
 }

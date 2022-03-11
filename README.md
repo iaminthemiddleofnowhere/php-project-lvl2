@@ -8,3 +8,6 @@
 
 ### Plain Yaml
 [![asciicast](https://asciinema.org/a/3pAS1adsnfKeae2W5tLITjlxY.svg)](https://asciinema.org/a/3pAS1adsnfKeae2W5tLITjlxY)
+
+### Multidimensional JSON and Yaml
+[![asciicast](https://asciinema.org/a/g42851kUVnPi5PN9b6h1Ch4Po.svg)](https://asciinema.org/a/g42851kUVnPi5PN9b6h1Ch4Po)
