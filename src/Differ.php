@@ -3,7 +3,7 @@
 namespace Differ\Differ;
 
 use function Differ\Parser\parse;
-use function Differ\Formatters\Stylish\diffToString;
+use function Differ\Formatters\Formatters\format;
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
@@ -16,7 +16,7 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     }
     $diff = findDiff($array1, $array2);
 
-    return diffToString($diff);
+    return format($diff, $format);
 }
 
 function findDiff(array $array1, array $array2): array

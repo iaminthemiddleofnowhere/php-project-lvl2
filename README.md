@@ -9,5 +9,10 @@
 ### Plain Yaml
 [![asciicast](https://asciinema.org/a/3pAS1adsnfKeae2W5tLITjlxY.svg)](https://asciinema.org/a/3pAS1adsnfKeae2W5tLITjlxY)
 
-### Multidimensional JSON and Yaml
+### Multidimensional JSON and Yaml:
+
+## Format stylish:
 [![asciicast](https://asciinema.org/a/g42851kUVnPi5PN9b6h1Ch4Po.svg)](https://asciinema.org/a/g42851kUVnPi5PN9b6h1Ch4Po)
+
+## Format plain:
+[![asciicast](https://asciinema.org/a/hJNaw91IeWHfQwnN8j18qwXp4.svg)](https://asciinema.org/a/hJNaw91IeWHfQwnN8j18qwXp4)
