@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Plain;
 
-function diffToString(array $array): string
+function diffToString(array $array)
 {
     $iter = function ($currentValue, $currentPath) use (&$iter) {
         $lines = array_reduce($currentValue, function ($carry, $value) use (&$iter, $currentPath) {

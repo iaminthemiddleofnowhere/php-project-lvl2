@@ -5,7 +5,7 @@ namespace Differ\Differ;
 use function Differ\Parser\parse;
 use function Differ\Formatters\Formatters\format;
 
-function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish')
 {
     try {
         $array1 = parse($pathToFile1);
@@ -19,7 +19,7 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     return format($diff, $format);
 }
 
-function findDiff(array $array1, array $array2): array
+function findDiff(array $array1, array $array2)
 {
     $iter = function ($currentArray1, $currentArray2) use (&$iter) {
         $result = array_map(function ($key1, $value1) use (&$currentArray2, &$iter) {
@@ -49,7 +49,7 @@ function findDiff(array $array1, array $array2): array
             }
         }
 
-        usort($result, fn($a, $b) => $a["key"] > $b["key"]);
+        usort($result, fn($a, $b) => strcmp($a["key"], $b["key"]));
 
         return $result;
     };

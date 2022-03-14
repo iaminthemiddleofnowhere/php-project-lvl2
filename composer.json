@@ -11,7 +11,8 @@
             "src/Parser.php",
             "src/Formatters.php",
             "src/Formatters/Stylish.php",
-            "src/Formatters/Plain.php"
+            "src/Formatters/Plain.php",
+            "src/Formatters/Json.php"
         ]
     },
     "require": {
@@ -23,6 +24,7 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^1.4"
     }
 }

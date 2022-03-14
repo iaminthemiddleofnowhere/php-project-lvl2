@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-function diffToString(array $array, string $replacer = " ", int $spaceCount = 2): string
+function diffToString(array $array, string $replacer = " ", int $spaceCount = 2)
 {
     $iter = function ($currentValue, $depth, $isDiff = true) use (&$iter, $replacer, $spaceCount) {
         if (!is_array($currentValue)) {

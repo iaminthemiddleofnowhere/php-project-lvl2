@@ -24,7 +24,6 @@ class DifferTest extends TestCase
         $expected = file_get_contents(__DIR__ . "/fixtures/result");
         $actual = genDiff($pathToFile1, $pathToFile2);
         $this->assertSame($expected, $actual);
-
     }
 
     public function testGenDiffJSONPlain(): void
@@ -43,6 +42,23 @@ class DifferTest extends TestCase
         $expected = file_get_contents(__DIR__ . "/fixtures/result_plain");
         $actual = genDiff($pathToFile1, $pathToFile2, 'plain');
         $this->assertSame($expected, $actual);
+    }
 
+    public function testGenDiffJSONjson(): void
+    {
+        $pathToFile1 = __DIR__ . "/fixtures/file1.json";
+        $pathToFile2 = __DIR__ . "/fixtures/file2.json";
+        $expected = file_get_contents(__DIR__ . "/fixtures/result.json");
+        $actual = genDiff($pathToFile1, $pathToFile2, 'json');
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGenDiffYamljson(): void
+    {
+        $pathToFile1 = __DIR__ . "/fixtures/file1.yml";
+        $pathToFile2 = __DIR__ . "/fixtures/file2.yml";
+        $expected = file_get_contents(__DIR__ . "/fixtures/result.json");
+        $actual = genDiff($pathToFile1, $pathToFile2, 'json');
+        $this->assertSame($expected, $actual);
     }
 }

@@ -4,7 +4,7 @@ namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parse(string $path): array
+function parse(string $path)
 {
     $realPath = realpath($path);
     $ext = pathinfo($realPath, PATHINFO_EXTENSION);
