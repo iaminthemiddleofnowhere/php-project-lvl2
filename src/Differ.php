@@ -10,6 +10,10 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 {
     $array1 = parse($pathToFile1);
     $array2 = parse($pathToFile2);
+    if (!$array1 || !$array2) {
+        echo "Something wrong with file's paths";
+        return;
+    }
     $diff = findDiff($array1, $array2);
 
     return format($diff, $format);

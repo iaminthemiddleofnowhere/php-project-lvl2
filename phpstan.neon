@@ -1,7 +1,7 @@
 includes:
   - vendor/hexlet/phpstan-fp/extension.neon
 parameters:
-	level: 1
+	level: 9
 	paths:
 		- src
 		- tests
