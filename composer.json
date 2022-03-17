@@ -17,7 +17,8 @@
     },
     "require": {
         "docopt/docopt": "^1.0",
-        "symfony/yaml": "^6.0"
+        "symfony/yaml": "^6.0",
+        "lstrojny/functional-php": "^1.17"
     },
     "scripts": {
         "tests": "phpunit tests"
@@ -25,6 +26,7 @@
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
         "phpunit/phpunit": "^9.5",
-        "phpstan/phpstan": "^1.4"
+        "phpstan/phpstan": "^1.4",
+        "hexlet/phpstan-fp": "^1.1"
     }
 }

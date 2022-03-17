@@ -4,36 +4,33 @@ namespace Differ\Formatters\Plain;
 
 function diffToString(array $array)
 {
-    $iter = function ($currentValue, $currentPath) use (&$iter) {
-        $lines = array_reduce($currentValue, function ($carry, $value) use (&$iter, $currentPath) {
-            $currentPath[] = $value['key'];
-            $str_path = implode(".", $currentPath);
+    $iter = function ($currentValue, $pathToValue) use (&$iter) {
+        $lines = array_map(function ($value) use (&$iter, $pathToValue) {
+            $currentPath = trim("{$pathToValue}.{$value['key']}", '.');
             if (array_key_exists("children", $value)) {
-                $carry[] = $iter($value['children'], $currentPath);
+                return $iter($value['children'], $currentPath);
             }
             if ($value['status'] === "changed") {
                 if (array_key_exists("removed", $value) && array_key_exists("added", $value)) {
                     $added = valueToStr($value['added']);
                     $removed = valueToStr($value['removed']);
-                    $carry[] = "Property '{$str_path}' was updated. From {$removed} to {$added}";
+                    return "Property '{$currentPath}' was updated. From {$removed} to {$added}";
                 } elseif (array_key_exists("added", $value)) {
                     $added = valueToStr($value['added']);
-                    $carry[] = "Property '{$str_path}' was added with value: {$added}";
+                    return "Property '{$currentPath}' was added with value: {$added}";
                 } elseif (array_key_exists("removed", $value)) {
-                    $carry[] = "Property '{$str_path}' was removed";
+                    return "Property '{$currentPath}' was removed";
                 }
             }
+        }, $currentValue);
 
-            return $carry;
-        });
-
-        return implode("\n", $lines);
+        return implode("\n", array_filter($lines));
     };
 
-    return $iter($array, []);
+    return $iter($array, null);
 }
 
-function valueToStr($value)
+function valueToStr(mixed $value)
 {
     if (!is_array($value)) {
         if (is_null($value)) {

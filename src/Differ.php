@@ -4,16 +4,12 @@ namespace Differ\Differ;
 
 use function Differ\Parser\parse;
 use function Differ\Formatters\Formatters\format;
+use function Functional\sort;
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish')
 {
-    try {
-        $array1 = parse($pathToFile1);
-        $array2 = parse($pathToFile2);
-    } catch (\Exception $e) {
-        echo $e->getMessage();
-        exit();
-    }
+    $array1 = parse($pathToFile1);
+    $array2 = parse($pathToFile2);
     $diff = findDiff($array1, $array2);
 
     return format($diff, $format);
@@ -22,7 +18,7 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 function findDiff(array $array1, array $array2)
 {
     $iter = function ($currentArray1, $currentArray2) use (&$iter) {
-        $result = array_map(function ($key1, $value1) use (&$currentArray2, &$iter) {
+        $diff1 = array_map(function ($key1, $value1) use (&$currentArray2, &$iter) {
             if (array_key_exists($key1, $currentArray2)) {
                 $value2 = $currentArray2[$key1];
                 if (!is_array($value1) && !is_array($value2)) {
@@ -43,15 +39,17 @@ function findDiff(array $array1, array $array2)
         array_keys($currentArray1),
         $currentArray1);
 
-        foreach ($currentArray2 as $key2 => $value2) {
+        $diff2 = array_map(function ($key2, $value2) use ($currentArray1) {
             if (!array_key_exists($key2, $currentArray1)) {
-                $result[] = ["key" => $key2, "status" => "changed", "added" => $value2];
+                return ["key" => $key2, "status" => "changed", "added" => $value2];
             }
-        }
+        },
+        array_keys($currentArray2),
+        $currentArray2);
 
-        usort($result, fn($a, $b) => strcmp($a["key"], $b["key"]));
+        $result = array_merge($diff1, array_filter($diff2));
 
-        return $result;
+        return sort($result, fn($a, $b) => strcmp($a['key'], $b['key']));
     };
 
     return $iter($array1, $array2);

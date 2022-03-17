@@ -16,7 +16,5 @@ function parse(string $path)
         case 'yaml':
         case 'yml':
             return Yaml::parse($data);
-        default:
-            throw new \Exception("Unknown extension: {$ext}\n");
     }
 }
