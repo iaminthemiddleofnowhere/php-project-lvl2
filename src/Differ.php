@@ -10,7 +10,7 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
 {
     $array1 = parse($pathToFile1);
     $array2 = parse($pathToFile2);
-    if (!$array1 || !$array2) {
+    if ($array1 === false || $array2 === false) {
         echo "Something wrong with file's paths";
         return;
     }
